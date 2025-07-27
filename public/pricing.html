@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamCoach Premium - Unlock Your Dreams</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body class="pricing-page">
+    <div class="pricing-container">
+        <header class="pricing-header">
+            <div class="logo">
+                <span class="moon-icon">🌙</span>
+                <h1>DreamCoach Premium</h1>
+            </div>
+            <p class="tagline">Unlock the full power of dream analysis</p>
+        </header>
+
+        <div class="pricing-comparison">
+            <div class="plan-card free-plan">
+                <h3 class="plan-name">Free</h3>
+                <div class="plan-price">
+                    <span class="currency">$</span>
+                    <span class="amount">0</span>
+                    <span class="period">/forever</span>
+                </div>
+                <ul class="plan-features">
+                    <li><i class="material-icons">check</i> 10 dream analyses</li>
+                    <li><i class="material-icons">check</i> Basic AI insights</li>
+                    <li><i class="material-icons">check</i> Dream history</li>
+                    <li class="disabled"><i class="material-icons">close</i> Trend analysis</li>
+                    <li class="disabled"><i class="material-icons">close</i> Bulk upload</li>
+                    <li class="disabled"><i class="material-icons">close</i> Export features</li>
+                    <li class="disabled"><i class="material-icons">close</i> Calendar integration</li>
+                </ul>
+                <button class="plan-button" disabled>Current Plan</button>
+            </div>
+
+            <div class="plan-card premium-plan featured">
+                <div class="popular-badge">Most Popular</div>
+                <h3 class="plan-name">Premium</h3>
+                <div class="plan-price">
+                    <span class="currency">$</span>
+                    <span class="amount">9.99</span>
+                    <span class="period">/month</span>
+                </div>
+                <ul class="plan-features">
+                    <li><i class="material-icons">check</i> <strong>Unlimited</strong> dream analyses</li>
+                    <li><i class="material-icons">check</i> Advanced AI insights</li>
+                    <li><i class="material-icons">check</i> Dream history</li>
+                    <li><i class="material-icons">check</i> Pattern & trend analysis</li>
+                    <li><i class="material-icons">check</i> Bulk dream upload</li>
+                    <li><i class="material-icons">check</i> Export to Google Docs</li>
+                    <li><i class="material-icons">check</i> Calendar reminders</li>
+                </ul>
+                <button class="plan-button premium" id="subscribePremium">
+                    Upgrade Now
+                </button>
+            </div>
+
+            <div class="plan-card annual-plan">
+                <div class="savings-badge">Save 20%</div>
+                <h3 class="plan-name">Premium Annual</h3>
+                <div class="plan-price">
+                    <span class="currency">$</span>
+                    <span class="amount">95.99</span>
+                    <span class="period">/year</span>
+                </div>
+                <ul class="plan-features">
+                    <li><i class="material-icons">check</i> Everything in Premium</li>
+                    <li><i class="material-icons">check</i> 2 months free</li>
+                    <li><i class="material-icons">check</i> Priority support</li>
+                    <li><i class="material-icons">check</i> Early access to features</li>
+                </ul>
+                <button class="plan-button annual" id="subscribeAnnual">
+                    Save with Annual
+                </button>
+            </div>
+        </div>
+
+        <div class="testimonials">
+            <h2>What Our Dreamers Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <p>"DreamCoach helped me understand recurring patterns in my dreams. The insights have been life-changing!"</p>
+                    <cite>- Sarah M.</cite>
+                </div>
+                <div class="testimonial">
+                    <p>"The trend analysis feature revealed connections I never noticed. Worth every penny!"</p>
+                    <cite>- Michael R.</cite>
+                </div>
+                <div class="testimonial">
+                    <p>"Finally, a dream journal that actually helps me grow. The AI insights are incredibly accurate."</p>
+                    <cite>- Emma T.</cite>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h4>Can I cancel anytime?</h4>
+                <p>Yes! You can cancel your subscription at any time. You'll continue to have access until the end of your billing period.</p>
+            </div>
+            <div class="faq-item">
+                <h4>What happens to my data if I cancel?</h4>
+                <p>Your dream history and analyses are yours forever. You can always access them, even on the free plan.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Is my payment information secure?</h4>
+                <p>Absolutely. We use Stripe for payment processing, which is PCI-compliant and used by millions of businesses.</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/subscription.js"></script>
+</body>
+</html>
