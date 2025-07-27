@@ -1,9 +1,7 @@
-import { auth, functions } from './firebase-config.js';
-import { httpsCallable } from 'firebase/functions';
+// PayPal integration is handled on a separate payment page
 
 class SubscriptionManager {
   constructor() {
-    this.stripe = Stripe('YOUR_STRIPE_PUBLISHABLE_KEY');
     this.init();
   }
 
@@ -12,53 +10,18 @@ class SubscriptionManager {
   }
 
   setupEventListeners() {
-    document.getElementById('subscribePremium')?.addEventListener('click', () => {
-      this.subscribe('monthly');
+    document.getElementById('subscribePremium')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = `/paypal.html?plan=monthly`;
     });
 
-    document.getElementById('subscribeAnnual')?.addEventListener('click', () => {
-      this.subscribe('annual');
+    document.getElementById('subscribeAnnual')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = `/paypal.html?plan=annual`;
     });
   }
 
-  async subscribe(plan) {
-    try {
-      if (!auth.currentUser) {
-        localStorage.setItem('pendingSubscription', plan);
-        window.location.href = '/?redirect=pricing';
-        return;
-      }
 
-      const button = event.target;
-      button.disabled = true;
-      button.innerHTML = '<div class="spinner"></div> Processing...';
-
-      const createCheckoutSession = httpsCallable(functions, 'createCheckoutSession');
-      const { data } = await createCheckoutSession({
-        priceId: plan === 'monthly' ? 'price_monthly_id' : 'price_annual_id',
-        successUrl: window.location.origin + '/app.html?subscription=success',
-        cancelUrl: window.location.origin + '/pricing.html'
-      });
-
-      const { error } = await this.stripe.redirectToCheckout({
-        sessionId: data.sessionId
-      });
-
-      if (error) {
-        console.error('Stripe error:', error);
-        this.showError('Payment failed. Please try again.');
-      }
-
-    } catch (error) {
-      console.error('Subscription error:', error);
-      this.showError('Unable to process subscription. Please try again.');
-    } finally {
-      if (event.target) {
-        event.target.disabled = false;
-        event.target.innerHTML = plan === 'monthly' ? 'Upgrade Now' : 'Save with Annual';
-      }
-    }
-  }
 
   showError(message) {
     const toast = document.createElement('div');
