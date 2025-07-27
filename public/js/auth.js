@@ -6,7 +6,7 @@ import {
   signInWithPopup,
   onAuthStateChanged,
   signOut
-} from 'firebase/auth';
+} from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
 
 class AuthManager {
   constructor() {
@@ -53,7 +53,7 @@ class AuthManager {
 
   async createUserProfile(user, additionalData = {}) {
     const { db } = await import('./firebase-config.js');
-    const { doc, setDoc, getDoc } = await import('firebase/firestore');
+    const { doc, setDoc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js');
 
     const userRef = doc(db, 'users', user.uid);
     const snapshot = await getDoc(userRef);

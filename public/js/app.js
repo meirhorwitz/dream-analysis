@@ -1,7 +1,7 @@
 import authManager from './auth.js';
 import DreamChat from './chat.js';
 import { auth } from './firebase-config.js';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
 
 function init(user) {
   document.getElementById('userEmail').textContent = user.email;

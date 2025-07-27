@@ -1,6 +1,6 @@
 import { db, functions, auth } from './firebase-config.js';
-import { collection, addDoc, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { httpsCallable } from 'firebase/functions';
+import { collection, addDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
+import { httpsCallable } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-functions.js';
 import authManager from './auth.js';
 
 class DreamChat {
@@ -9,7 +9,6 @@ class DreamChat {
     this.chatContainer = document.getElementById('chatMessages');
     this.dreamInput = document.getElementById('dreamInput');
     this.sendBtn = document.getElementById('sendBtn');
-    this.analysisCount = 0;
     this.initChat();
   }
 
@@ -50,8 +49,6 @@ class DreamChat {
       this.addMessage('assistant', result.data.analysis);
 
       this.updateUsageCounter(result.data.dreamsAnalyzed);
-      this.analysisCount++;
-      this.checkGooglePrompt();
 
     } catch (error) {
       this.removeTypingIndicator(typingId);
@@ -188,22 +185,6 @@ class DreamChat {
     }
   }
 
-  checkGooglePrompt() {
-    if (this.analysisCount === 2) {
-      const isGoogle = auth.currentUser?.providerData?.some(p => p.providerId === 'google.com');
-      if (!isGoogle) {
-        const prompt = document.createElement('div');
-        prompt.className = 'google-prompt';
-        prompt.innerHTML = `
-          <p>Save your progress by creating a Google account.</p>
-          <button class="google-signup-btn">Create Google Account</button>
-        `;
-        prompt.querySelector('button').addEventListener('click', () => authManager.signInWithGoogle());
-        this.chatContainer.appendChild(prompt);
-        this.scrollToBottom();
-      }
-    }
-  }
 }
 
 export default DreamChat;
