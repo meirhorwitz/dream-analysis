@@ -1,0 +1,12 @@
+{
+  "openai": {
+    "key": "YOUR_OPENAI_API_KEY"
+  },
+  "stripe": {
+    "secret": "YOUR_STRIPE_SECRET_KEY"
+  },
+  "paypal": {
+    "client_id": "YOUR_PAYPAL_CLIENT_ID",
+    "client_secret": "YOUR_PAYPAL_SECRET"
+  }
+}

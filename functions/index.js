@@ -257,9 +257,12 @@ function extractThemes(text) {
 
 // Test function for deployment verification
 exports.testFunction = functions.https.onRequest((request, response) => {
-  response.json({ 
-    status: 'success', 
+  response.json({
+    status: 'success',
     message: 'DreamCoach functions are deployed!',
     timestamp: new Date().toISOString()
   });
 });
+
+// PayPal subscription function
+exports.createPayPalSubscription = require('./pp/paypal').createPayPalSubscription;

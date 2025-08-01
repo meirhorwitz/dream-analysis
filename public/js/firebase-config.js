@@ -22,4 +22,15 @@ const db = getFirestore(app);
 const functions = getFunctions(app);
 const storage = getStorage(app);
 
+// Connect to Firebase emulators when running locally
+if (location.hostname === 'localhost') {
+  const { connectAuthEmulator } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js');
+  const { connectFirestoreEmulator } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js');
+  const { connectFunctionsEmulator } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-functions.js');
+
+  connectAuthEmulator(auth, 'http://localhost:9099');
+  connectFirestoreEmulator(db, 'localhost', 8080);
+  connectFunctionsEmulator(functions, 'localhost', 5001);
+}
+
 export { app, analytics, auth, db, functions, storage };
