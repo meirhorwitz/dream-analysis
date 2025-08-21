@@ -124,16 +124,8 @@
         import { functions } from './js/firebase-config.js';
         import { httpsCallable } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-functions.js';
 
-        (async () => {
-            try {
-                await AuthManager.requireAuth();
-                initializeApp();
-            } catch (error) {
-                console.log(error.message); // Should log "Redirecting to login"
-                // The script will stop execution here if not authenticated
-            }
-        })();
-        
+        initializeApp();
+
         function initializeApp() {
             const urlParams = new URLSearchParams(window.location.search);
             const isTestMode = urlParams.get('test') === 'true';
@@ -147,6 +139,12 @@
             annualBtn.addEventListener('click', () => handlePlanSelection('annual'));
 
             async function handlePlanSelection(planType) {
+                try {
+                    await AuthManager.requireAuth();
+                } catch (error) {
+                    return; // User will be redirected to login
+                }
+
                 if (isTestMode) {
                     await activateTestSubscription(planType);
                     return;
@@ -154,11 +152,11 @@
 
                 // Show payment modal
                 paymentModal.classList.remove('hidden');
-                
+
                 try {
                     // Create checkout session
                     const createCheckoutSession = httpsCallable(functions, 'createCheckoutSession');
-                    const { data } = await createCheckoutSession({ 
+                    const { data } = await createCheckoutSession({
                         planType,
                         successUrl: window.location.origin + '/app.html?payment=success',
                         cancelUrl: window.location.origin + '/pricing.html'

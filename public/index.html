@@ -99,8 +99,9 @@
     </div>
 
     <script type="module" src="js/firebase-config.js"></script>
-    <script type="module" src="js/auth.js"></script>
     <script type="module">
+        import AuthManager from './js/auth.js';
+
         // Modal handling
         const authModal = document.getElementById('authModal');
         const startFreeBtn = document.getElementById('startFreeBtn');
@@ -109,6 +110,7 @@
         const nameGroup = document.getElementById('nameGroup');
         const submitBtnText = document.getElementById('submitBtnText');
         const authForm = document.getElementById('authForm');
+        const googleSignInBtn = document.getElementById('googleSignInBtn');
 
         // Show modal
         function showAuthModal(mode = 'signin') {
@@ -130,7 +132,7 @@
                 const tab = button.dataset.tab;
                 tabButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
-                
+
                 if (tab === 'signup') {
                     nameGroup.style.display = 'block';
                     submitBtnText.textContent = 'Sign Up';
@@ -139,6 +141,40 @@
                     submitBtnText.textContent = 'Sign In';
                 }
             });
+        });
+
+        // Auth form submission
+        authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const mode = document.querySelector('.tab-button.active').dataset.tab;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const name = document.getElementById('name').value;
+
+            try {
+                await AuthManager.authStatePromise;
+                if (mode === 'signup') {
+                    await AuthManager.signUp(email, password, name);
+                } else {
+                    await AuthManager.signIn(email, password);
+                }
+                authModal.classList.add('hidden');
+            } catch (err) {
+                console.error(err);
+                alert(err.message);
+            }
+        });
+
+        // Google sign in
+        googleSignInBtn.addEventListener('click', async () => {
+            try {
+                await AuthManager.authStatePromise;
+                await AuthManager.signInWithGoogle();
+                authModal.classList.add('hidden');
+            } catch (err) {
+                console.error(err);
+                alert(err.message);
+            }
         });
 
         // Event listeners

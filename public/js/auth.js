@@ -91,7 +91,7 @@ class AuthManager {
         window.location.href = '/app.html';
       }
     } else {
-      if (window.location.pathname.startsWith('/app') || window.location.pathname.startsWith('/pricing')) {
+      if (window.location.pathname.startsWith('/app')) {
         window.location.href = '/';
       }
     }
