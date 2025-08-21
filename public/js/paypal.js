@@ -1,3 +1,4 @@
+/*
 const planIds = {
   monthly: 'PAYPAL_MONTHLY_PLAN_ID',
   annual: 'PAYPAL_ANNUAL_PLAN_ID'
@@ -17,3 +18,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }).render('#paypal-button-container');
 });
+*/

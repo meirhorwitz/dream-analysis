@@ -20,13 +20,13 @@ import {
 
 // Your Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBUmGhmZkktNU-_QwFtERl-T6oRf-_sAgQ",
-  authDomain: "dreamanalysis-39322.firebaseapp.com",
-  projectId: "dreamanalysis-39322",
-  storageBucket: "dreamanalysis-39322.firebasestorage.app",
+  apiKey: "AIzaSyBUmGhmZkktNU-_QwFtERl-T6oRf-_sAgQ", // Replace with your actual API key
+  authDomain: "dreamanalysis-39322.firebaseapp.com", // Replace with your actual auth domain
+  projectId: "dreamanalysis-39322", // Replace with your actual project ID
+  storageBucket: "dreamanalysis-39322.firebasestorage.app", // Replace with your actual storage bucket
   messagingSenderId: "222523234712",
   appId: "1:222523234712:web:b508d345729d98ad4133ed",
-  measurementId: "G-0RKJVBCC8K"
+  measurementId: "G-0RKJVBCC8K" // Replace with your actual measurement ID
 };
 
 // Initialize Firebase
