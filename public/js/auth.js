@@ -11,12 +11,20 @@ import {
 class AuthManager {
   constructor() {
     this.user = null;
+    this.authReady = false;
+    this.authStatePromise = new Promise((resolve) => {
+      this.resolveAuthState = resolve;
+    });
     this.initAuthListener();
   }
 
   initAuthListener() {
     onAuthStateChanged(auth, (user) => {
       this.user = user;
+      if (!this.authReady) {
+        this.authReady = true;
+        this.resolveAuthState(user);
+      }
       this.handleAuthStateChange(user);
     });
   }
@@ -54,10 +62,8 @@ class AuthManager {
   async createUserProfile(user, additionalData = {}) {
     const { db } = await import('./firebase-config.js');
     const { doc, setDoc, getDoc } = await import('https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js');
-
     const userRef = doc(db, 'users', user.uid);
     const snapshot = await getDoc(userRef);
-
     if (!snapshot.exists()) {
       await setDoc(userRef, {
         profile: {
@@ -74,15 +80,32 @@ class AuthManager {
   }
 
   handleAuthStateChange(user) {
+    if (!this.authReady) return;
+
+    const intendedUrl = sessionStorage.getItem('intendedUrl');
     if (user) {
-      if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+      if (intendedUrl) {
+        sessionStorage.removeItem('intendedUrl');
+        window.location.href = intendedUrl;
+      } else if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
         window.location.href = '/app.html';
       }
     } else {
-      if (window.location.pathname === '/app.html') {
+      if (window.location.pathname.startsWith('/app') || window.location.pathname.startsWith('/pricing')) {
         window.location.href = '/';
       }
     }
+  }
+
+  async requireAuth() {
+    await this.authStatePromise;
+    if (!this.user) {
+      sessionStorage.setItem('intendedUrl', window.location.href);
+      window.location.href = '/';
+      // Throw an error to stop execution of scripts on the page
+      throw new Error('Redirecting to login');
+    }
+    return true;
   }
 
   async logout() {

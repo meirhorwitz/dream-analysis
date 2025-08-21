@@ -57,20 +57,20 @@ if ((location.hostname === 'localhost' || location.hostname === '127.0.0.1') && 
   
   try {
     // Connect Auth emulator
-    connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: true });
+    connectAuthEmulator(auth, 'http://127.0.0.1:9101', { disableWarnings: true });
     console.log('✅ Auth Emulator connected');
     
     // Connect Firestore emulator
-    connectFirestoreEmulator(db, 'localhost', 8080);
+    connectFirestoreEmulator(db, '127.0.0.1', 8082);
     console.log('✅ Firestore Emulator connected');
     
     // Connect Functions emulator
-    connectFunctionsEmulator(functions, 'localhost', 5001);
+    connectFunctionsEmulator(functions, '127.0.0.1', 5004);
     console.log('✅ Functions Emulator connected');
     
-    // Connect Storage emulator (uncomment if using storage)
-    // connectStorageEmulator(storage, 'localhost', 9199);
-    // console.log('✅ Storage Emulator connected');
+    // Connect Storage emulator
+    connectStorageEmulator(storage, '127.0.0.1', 9201);
+    console.log('✅ Storage Emulator connected');
     
     emulatorsConnected = true;
     console.log('✅ All Firebase Emulators connected successfully');

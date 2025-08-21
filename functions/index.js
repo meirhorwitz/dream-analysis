@@ -200,6 +200,34 @@ exports.createCheckoutSession = functions.https.onCall(async (data, context) => 
   }
 });
 
+exports.activateTestSubscription = functions.https.onCall(async (data, context) => {
+    if (!context.auth) {
+        throw new functions.https.HttpsError('unauthenticated', 'User must be authenticated.');
+    }
+
+    const userId = context.auth.uid;
+    const { planType } = data;
+
+    if (!['monthly', 'annual'].includes(planType)) {
+        throw new functions.https.HttpsError('invalid-argument', 'Invalid plan type specified.');
+    }
+
+    try {
+        const userRef = admin.firestore().doc(`users/${userId}`);
+        await userRef.update({
+            'profile.subscription.status': 'premium',
+            'profile.subscription.plan': planType,
+            'profile.subscription.startDate': admin.firestore.FieldValue.serverTimestamp(),
+        });
+
+        return { status: 'success', message: `Test subscription (${planType}) activated.` };
+    } catch (error) {
+        console.error('Error activating test subscription:', error);
+        throw new functions.https.HttpsError('internal', 'Failed to activate test subscription.');
+    }
+});
+
+
 // Helper function to extract symbols from analysis
 function extractSymbols(text) {
   const symbolKeywords = ['symbol', 'represents', 'signifies', 'archetype', 'symbolizes'];

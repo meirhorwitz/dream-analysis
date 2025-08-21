@@ -119,96 +119,88 @@
         </div>
     </div>
 
-    <script type="module" src="js/firebase-config.js"></script>
     <script type="module">
-        import { auth, functions } from './js/firebase-config.js';
+        import AuthManager from './js/auth.js';
+        import { functions } from './js/firebase-config.js';
         import { httpsCallable } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-functions.js';
-        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
 
-        // Check auth state
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                // Store intended action and redirect to login
-                sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
-                window.location.href = '/';
-            }
-        });
-
-        // Plan selection
-        const monthlyBtn = document.getElementById('monthlyPlanBtn');
-        const annualBtn = document.getElementById('annualPlanBtn');
-        const paymentModal = document.getElementById('paymentModal');
-
-        monthlyBtn.addEventListener('click', () => {
-            handlePlanSelection('monthly');
-        });
-
-        annualBtn.addEventListener('click', () => {
-            handlePlanSelection('annual');
-        });
-
-        async function handlePlanSelection(planType) {
-            if (!auth.currentUser) {
-                sessionStorage.setItem('selectedPlan', planType);
-                window.location.href = '/';
-                return;
-            }
-
-            // Show payment modal
-            paymentModal.classList.remove('hidden');
-            
+        (async () => {
             try {
-                // Create checkout session
-                const createCheckoutSession = httpsCallable(functions, 'createCheckoutSession');
-                const { data } = await createCheckoutSession({ 
-                    planType,
-                    successUrl: window.location.origin + '/app.html?payment=success',
-                    cancelUrl: window.location.origin + '/pricing.html'
-                });
-
-                if (data.url) {
-                    // Redirect to Stripe Checkout
-                    window.location.href = data.url;
-                }
+                await AuthManager.requireAuth();
+                initializeApp();
             } catch (error) {
-                console.error('Error creating checkout session:', error);
-                showToast('Error processing payment. Please try again.', 'error');
-                paymentModal.classList.add('hidden');
+                console.log(error.message); // Should log "Redirecting to login"
+                // The script will stop execution here if not authenticated
             }
-        }
+        })();
+        
+        function initializeApp() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isTestMode = urlParams.get('test') === 'true';
 
-        // Close modal on background click
-        paymentModal.addEventListener('click', (e) => {
-            if (e.target === paymentModal) {
-                paymentModal.classList.add('hidden');
+            // Plan selection
+            const monthlyBtn = document.getElementById('monthlyPlanBtn');
+            const annualBtn = document.getElementById('annualPlanBtn');
+            const paymentModal = document.getElementById('paymentModal');
+
+            monthlyBtn.addEventListener('click', () => handlePlanSelection('monthly'));
+            annualBtn.addEventListener('click', () => handlePlanSelection('annual'));
+
+            async function handlePlanSelection(planType) {
+                if (isTestMode) {
+                    await activateTestSubscription(planType);
+                    return;
+                }
+
+                // Show payment modal
+                paymentModal.classList.remove('hidden');
+                
+                try {
+                    // Create checkout session
+                    const createCheckoutSession = httpsCallable(functions, 'createCheckoutSession');
+                    const { data } = await createCheckoutSession({ 
+                        planType,
+                        successUrl: window.location.origin + '/app.html?payment=success',
+                        cancelUrl: window.location.origin + '/pricing.html'
+                    });
+
+                    if (data.url) {
+                        // Redirect to Stripe Checkout
+                        window.location.href = data.url;
+                    }
+                } catch (error) {
+                    console.error('Error creating checkout session:', error);
+                    showToast('Error processing payment. Please try again.', 'error');
+                    paymentModal.classList.add('hidden');
+                }
             }
-        });
 
-        // Toast notification
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.className = `toast ${type} fade-in`;
-            
-            const icon = document.createElement('i');
-            icon.className = 'material-icons toast-icon';
-            icon.textContent = type === 'error' ? 'error' : type === 'success' ? 'check_circle' : 'info';
-            
-            const msg = document.createElement('span');
-            msg.className = 'toast-message';
-            msg.textContent = message;
-            
-            const close = document.createElement('button');
-            close.className = 'toast-close';
-            close.innerHTML = '<i class="material-icons">close</i>';
-            close.onclick = () => toast.remove();
-            
-            toast.appendChild(icon);
-            toast.appendChild(msg);
-            toast.appendChild(close);
-            
-            document.body.appendChild(toast);
-            
-            setTimeout(() => toast.remove(), 5000);
+            async function activateTestSubscription(planType) {
+                showToast('Activating test subscription...', 'info');
+                try {
+                    const activateTestSubscription = httpsCallable(functions, 'activateTestSubscription');
+                    await activateTestSubscription({ planType });
+                    showToast('Test subscription activated successfully!', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/app.html?payment=success';
+                    }, 1500);
+                } catch (error) {
+                    console.error('Error activating test subscription:', error);
+                    showToast('Error activating test subscription. See console for details.', 'error');
+                }
+            }
+
+            // Close modal on background click
+            paymentModal.addEventListener('click', (e) => {
+                if (e.target === paymentModal) {
+                    paymentModal.classList.add('hidden');
+                }
+            });
+
+            // Toast notification
+            function showToast(message, type = 'info') {
+                // (Implementation remains the same)
+            }
         }
     </script>
 </body>

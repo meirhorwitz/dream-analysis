@@ -34,18 +34,34 @@
     "rules": "storage.rules"
   },
   "emulators": {
-    "firestore": {
-      "port": 8080
+    "auth": {
+      "host": "127.0.0.1",
+      "port": 9101
     },
     "functions": {
-      "port": 5001,
-      "host": "localhost"
+      "host": "127.0.0.1",
+      "port": 5004
     },
-    "auth": {
-      "port": 9099
+    "firestore": {
+      "host": "127.0.0.1",
+      "port": 8082
     },
     "hosting": {
-      "port": 5000
+      "host": "127.0.0.1",
+      "port": 5005
+    },
+    "storage": {
+      "host": "127.0.0.1",
+      "port": 9201
+    },
+    "ui": {
+      "enabled": true,
+      "host": "127.0.0.1",
+      "port": 4002
+    },
+    "hub": {
+      "host": "127.0.0.1",
+      "port": 4401
     }
   }
 }
