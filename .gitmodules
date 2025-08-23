@@ -1,0 +1,3 @@
+[submodule "dreamcoach-firebase"]
+    path = dreamcoach-firebase
+    url = https://github.com/meirhorwitz/dreamcoach-firebase.git
